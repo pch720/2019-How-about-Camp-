@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="poly.persistance.mapper.BoardMapper">
+<!-- 게시글 추가 -->
+<insert id="boardAddproc" parameterType="BoardDTO">
+	INSERT
+	INTO
+	BOARD
+	(
+		USER_SEQ_NO,
+		NOTICE,
+		BOARD_TITLE,
+		BOARD_CONTENT,
+		BOARD_COUNT,
+		BOARD_WRITER,
+		WRITE_DATE
+	)
+	VALUES
+	(
+		#{userSeq},
+		#{boardNotice},
+		#{boardTitle},
+		#{boardContent},
+		0,
+		#{boardWriter},
+		SYSDATE()
+	)
+	
+</insert>
+<!-- 게시글 확인 -->
+<select id="getBoardList" resultType="BoardDTO" parameterType="map">
+	SELECT
+		BOARD_SEQ_NO AS boardSeq,
+		NOTICE AS boardNotice,
+		BOARD_TITLE AS boardTitle,
+		BOARD_CONTENT AS boardContent,
+		BOARD_COUNT AS boardCount,
+		BOARD_WRITER AS boardWriter,
+		WRITE_DATE AS boardWritedate
+	FROM
+		BOARD
+	ORDER BY BOARD_SEQ_NO DESC
+	LIMIT #{startlist}, #{listsize}
+</select>
+<!-- 게시글 상세 -->
+<select id="boardDetail" resultType="BoardDTO">
+	SELECT
+		BOARD_SEQ_NO AS boardSeq,
+		NOTICE AS boardNotice,
+		BOARD_TITLE AS boardTitle,
+		BOARD_CONTENT AS boardContent,
+		BOARD_COUNT AS boardCount,
+		BOARD_WRITER AS boardWriter,
+		WRITE_DATE AS boardWritedate,
+		BUD AS boardUpdate
+	FROM
+		BOARD
+	WHERE
+		BOARD_SEQ_NO=#{boardSeq}
+</select>
+<!-- 게시글 삭제 -->
+<delete id="boardDelete" parameterType="BoardDTO">
+	DELETE
+	FROM
+		BOARD
+	WHERE
+		BOARD_SEQ_NO =#{boardSeq}
+</delete>
+<!-- 게시글 수정 -->
+<update id="boardMod" parameterType="BoardDTO">
+UPDATE
+	BOARD
+SET
+		NOTICE=#{boardNotice},
+		BOARD_TITLE=#{boardTitle},
+		BOARD_CONTENT=#{boardContent},
+		BUD=SYSDATE(),
+		BUN=#{boardUpnum}
+		
+WHERE
+	BOARD_SEQ_NO = #{boardSeq}
+</update>
+<!-- 조회수 -->
+<update id="count" parameterType="BoardDTO">
+UPDATE
+	BOARD
+SET
+		BOARD_COUNT=#{boardCount}
+WHERE
+	BOARD_SEQ_NO = #{boardSeq}
+</update>
+<!-- 작성 게시글 -->
+<select id="userBoard" resultType="BoardDTO" parameterType="map">
+	SELECT
+		BOARD_SEQ_NO AS boardSeq,
+		NOTICE AS boardNotice,
+		BOARD_TITLE AS boardTitle,
+		BOARD_CONTENT AS boardContent,
+		BOARD_COUNT AS boardCount,
+		BOARD_WRITER AS boardWriter,
+		WRITE_DATE AS boardWritedate
+	FROM
+		BOARD
+	WHERE
+		USER_SEQ_NO=#{userSeq}
+	ORDER BY BOARD_SEQ_NO DESC
+	LIMIT #{startlist}, #{listsize}
+</select>
+<!-- 게시글 총 수 -->
+<select id="TotalCount" resultType="integer">
+	SELECT COUNT(0)
+	FROM 
+		BOARD
+</select>
+<!-- 작성게시물 총 수 -->
+<select id="myTotalCount" resultType="integer">
+	SELECT COUNT(0)
+	FROM 
+		BOARD
+	WHERE
+		USER_SEQ_NO=#{userSeq}
+</select>
+</mapper>

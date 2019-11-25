@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="poly.persistance.mapper.ReviewMapper">
+<!-- 리뷰 추가 -->
+<insert id="reviewAdd" parameterType="ReviewDTO">
+	INSERT
+	INTO
+	REVIEW
+	(
+		CAMP_NAME,
+		USER_SEQ_NO,
+		REVIEW_SAT,
+		REVIEW_CONTENT,
+		REVIEW_WRITER,
+		RWRITE_DATE
+	)
+	VALUES
+	(
+		#{campName},
+		#{userSeq},
+		#{reviewSp},
+		#{reviewContent},
+		#{reviewWriter},
+		SYSDATE()
+	)
+</insert>
+<!-- 리뷰 확인 -->
+<select id="getReviewList" resultType="ReviewDTO" parameterType="map">
+	SELECT
+		CAMP_NAME AS campName,
+		USER_SEQ_NO AS userSeq,
+		REVIEW_SAT AS reviewSp,
+		REVIEW_SEQ_NO AS reviewSeq,
+		REVIEW_CONTENT AS reviewContent,
+		REVIEW_WRITER AS reviewWriter,
+		RWRITE_DATE AS reviewWritedate,
+		RUD AS reviewUpdate
+	FROM
+		REVIEW
+	WHERE
+		CAMP_NAME = #{campName}
+	ORDER BY REVIEW_SEQ_NO DESC
+</select>
+<delete id="reviewDel" parameterType="integer">
+	DELETE
+		FROM
+			REVIEW
+	WHERE
+		REVIEW_SEQ_NO =#{reviewSeq}
+</delete>
+<update id="reviewMod" parameterType="ReviewDTO">
+	UPDATE
+		REVIEW
+	SET
+			REVIEW_SAT=#{reviewSp},
+			REVIEW_CONTENT=#{reviewContent},
+			RUD=SYSDATE(),
+			RUN=#{reviewUpnum}
+			
+	WHERE
+		REVIEW_SEQ_NO =#{reviewSeq}
+</update>
+</mapper>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="poly.persistance.mapper.UserMapper">
+<!-- 회원가입 -->
+<insert id="userRegProc" parameterType="UserDTO">
+	INSERT
+	INTO
+	USER_INFO
+	(
+		USER_EMAIL,
+		USER_NAME,
+		PASSWORD,
+		REGDATE,
+		PHONE_NUM
+	)
+	VALUES
+	(
+		#{userEmail},
+		#{userName},
+		#{userPassword},
+		SYSDATE(),
+		#{userPhone}
+	)
+	
+</insert>
+<!-- 휴대폰 번호 중복확인 -->
+<select id="pCheck" parameterType="String" resultType="String">
+SELECT COUNT(*)
+FROM
+	USER_INFO
+WHERE
+	PHONE_NUM=#{userPhone}
+</select>
+<!-- 이메일 중복확인 -->
+<select id="eCheck" parameterType="String" resultType="String">
+SELECT COUNT(*)
+FROM
+	USER_INFO
+WHERE
+	USER_EMAIL=#{userEmail}
+</select>
+<!-- 로그인하고정보가져오기 -->
+<select id="getUserInfo" parameterType="UserDTO" resultType="UserDTO">
+SELECT
+	USER_SEQ_NO AS userSeq,
+	USER_EMAIL AS userEmail,
+	USER_NAME AS userName,
+	PHONE_NUM AS userPhone,
+	REGDATE AS userRegdate,
+	UUD AS userUpdate,
+	UUN AS userUpnum
+FROM USER_INFO
+WHERE USER_EMAIL = #{userEmail} AND PASSWORD = #{userPassword}
+</select>
+<!-- 회원탈퇴 하기 -->
+<delete id="userDelete" parameterType="UserDTO">
+DELETE
+FROM
+	USER_INFO
+WHERE
+	USER_EMAIL=#{userEmail}
+</delete>
+<!-- 아이디 찾기 -->
+<select id="email1" parameterType="UserDTO" resultType="String">
+SELECT SUBSTR(USER_EMAIL,1,1)
+FROM
+ USER_INFO
+WHERE
+  USER_NAME = #{userName} and
+  PHONE_NUM = #{userPhone}
+</select>
+<select id="email2" parameterType="UserDTO" resultType="String">
+SELECT SUBSTR(USER_EMAIL,7)
+FROM
+ USER_INFO
+WHERE
+  USER_NAME = #{userName} and
+  PHONE_NUM = #{userPhone}
+</select>
+<!-- 비밀번호 변경 -->
+<update id="changeP" parameterType="UserDTO">
+UPDATE
+	USER_INFO
+SET
+	PASSWORD = #{userPassword}
+WHERE
+	USER_EMAIL = #{userEmail}
+</update>
+<select id="pw" parameterType="string" resultType="string">
+SELECT
+	PASSWORD
+FROM
+	USER_INFO
+WHERE
+	USER_EMAIL = #{userEmail}
+</select>
+<!-- 회원정보 변경 -->
+<update id="userMod" parameterType="UserDTO">
+UPDATE
+	USER_INFO
+SET
+		USER_EMAIL = #{userEmail},
+		USER_NAME = #{userName},
+		UUN = #{userUpnum},
+		UUD=SYSDATE(),
+		PHONE_NUM = #{userPhone}
+		
+WHERE
+	USER_SEQ_NO = #{userSeq}
+</update>
+</mapper>
