@@ -125,7 +125,7 @@ public class UserController {
 			if (uDTO == null) {
 				msg = "로그인에 실패하였습니다.";
 				url = referer;
-				log.info("로그인 시발");
+				log.info("로그인 실패");
 			}else { 
 			String userAss=uDTO.getUserAss();
 			
