@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 
+
   <!-- Footer -->
   <footer class="footer text-center"style="min-width: 360px;">
     <div class="container">
